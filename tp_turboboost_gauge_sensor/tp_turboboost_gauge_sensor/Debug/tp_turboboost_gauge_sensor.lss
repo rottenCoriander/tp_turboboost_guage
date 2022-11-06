@@ -1,0 +1,221 @@
+
+tp_turboboost_gauge_sensor.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         000000f6  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000004  00800060  000000f6  0000016a  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  0000016e  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  000001a0  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000030  00000000  00000000  000001dc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   000004f8  00000000  00000000  0000020c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 00000467  00000000  00000000  00000704  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000023e  00000000  00000000  00000b6b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  00000064  00000000  00000000  00000dac  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000304  00000000  00000000  00000e10  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000078  00000000  00000000  00001114  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000020  00000000  00000000  0000118c  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	10 c0       	rjmp	.+32     	; 0x22 <__ctors_end>
+   2:	22 c0       	rjmp	.+68     	; 0x48 <__bad_interrupt>
+   4:	4b c0       	rjmp	.+150    	; 0x9c <__vector_2>
+   6:	20 c0       	rjmp	.+64     	; 0x48 <__bad_interrupt>
+   8:	1f c0       	rjmp	.+62     	; 0x48 <__bad_interrupt>
+   a:	1e c0       	rjmp	.+60     	; 0x48 <__bad_interrupt>
+   c:	1d c0       	rjmp	.+58     	; 0x48 <__bad_interrupt>
+   e:	1c c0       	rjmp	.+56     	; 0x48 <__bad_interrupt>
+  10:	1b c0       	rjmp	.+54     	; 0x48 <__bad_interrupt>
+  12:	1a c0       	rjmp	.+52     	; 0x48 <__bad_interrupt>
+  14:	19 c0       	rjmp	.+50     	; 0x48 <__bad_interrupt>
+  16:	18 c0       	rjmp	.+48     	; 0x48 <__bad_interrupt>
+  18:	17 c0       	rjmp	.+46     	; 0x48 <__bad_interrupt>
+  1a:	16 c0       	rjmp	.+44     	; 0x48 <__bad_interrupt>
+  1c:	15 c0       	rjmp	.+42     	; 0x48 <__bad_interrupt>
+  1e:	14 c0       	rjmp	.+40     	; 0x48 <__bad_interrupt>
+  20:	57 c0       	rjmp	.+174    	; 0xd0 <__vector_16>
+
+00000022 <__ctors_end>:
+  22:	11 24       	eor	r1, r1
+  24:	1f be       	out	0x3f, r1	; 63
+  26:	cf e5       	ldi	r28, 0x5F	; 95
+  28:	d2 e0       	ldi	r29, 0x02	; 2
+  2a:	de bf       	out	0x3e, r29	; 62
+  2c:	cd bf       	out	0x3d, r28	; 61
+
+0000002e <__do_copy_data>:
+  2e:	10 e0       	ldi	r17, 0x00	; 0
+  30:	a0 e6       	ldi	r26, 0x60	; 96
+  32:	b0 e0       	ldi	r27, 0x00	; 0
+  34:	e6 ef       	ldi	r30, 0xF6	; 246
+  36:	f0 e0       	ldi	r31, 0x00	; 0
+  38:	02 c0       	rjmp	.+4      	; 0x3e <__SP_H__>
+  3a:	05 90       	lpm	r0, Z+
+  3c:	0d 92       	st	X+, r0
+  3e:	a4 36       	cpi	r26, 0x64	; 100
+  40:	b1 07       	cpc	r27, r17
+  42:	d9 f7       	brne	.-10     	; 0x3a <__do_copy_data+0xc>
+  44:	02 d0       	rcall	.+4      	; 0x4a <main>
+  46:	55 c0       	rjmp	.+170    	; 0xf2 <_exit>
+
+00000048 <__bad_interrupt>:
+  48:	db cf       	rjmp	.-74     	; 0x0 <__vectors>
+
+0000004a <main>:
+
+int main(void)
+{
+    /* Replace with your application code */
+	//I/O Configuration
+	DDRA |= (1 << DO);
+  4a:	8a b3       	in	r24, 0x1a	; 26
+  4c:	80 62       	ori	r24, 0x20	; 32
+  4e:	8a bb       	out	0x1a, r24	; 26
+	PORTA |= (1 << CLK)|(1 << DI)|(1 << CS);
+  50:	8b b3       	in	r24, 0x1b	; 27
+  52:	80 6d       	ori	r24, 0xD0	; 208
+  54:	8b bb       	out	0x1b, r24	; 27
+	
+	//USI (SPI)
+	USICR = 0x18;  	//USIWM0 -> Bit 4, USICS1 -> Bit3
+  56:	88 e1       	ldi	r24, 0x18	; 24
+  58:	8d b9       	out	0x0d, r24	; 13
+	
+	//Pin Change Interrupt
+	GIMSK |= (1 << PCIE0);
+  5a:	8b b7       	in	r24, 0x3b	; 59
+  5c:	80 61       	ori	r24, 0x10	; 16
+  5e:	8b bf       	out	0x3b, r24	; 59
+	PCMSK0 |= (1 << PCINT7);
+  60:	82 b3       	in	r24, 0x12	; 18
+  62:	80 68       	ori	r24, 0x80	; 128
+  64:	82 bb       	out	0x12, r24	; 18
+	
+	//ADC Config.
+	DIDR0 |= (1 << ADC1D);
+  66:	81 b1       	in	r24, 0x01	; 1
+  68:	82 60       	ori	r24, 0x02	; 2
+  6a:	81 b9       	out	0x01, r24	; 1
+	ADCSRA = (1 << ADEN)|(1 << ADSC)|(1 << ADATE);
+  6c:	80 ee       	ldi	r24, 0xE0	; 224
+  6e:	86 b9       	out	0x06, r24	; 6
+	
+	//MUX Select PA1
+	ADMUX &= ~(0x3F);
+  70:	87 b1       	in	r24, 0x07	; 7
+  72:	80 7c       	andi	r24, 0xC0	; 192
+  74:	87 b9       	out	0x07, r24	; 7
+	ADMUX |= 0x01;
+  76:	87 b1       	in	r24, 0x07	; 7
+  78:	81 60       	ori	r24, 0x01	; 1
+  7a:	87 b9       	out	0x07, r24	; 7
+	
+	//Enable Interrupt
+	sei();
+  7c:	78 94       	sei
+	
+	
+    while (1) 
+    {
+		if( ( (ADCSRA & (1 << ADIF)) >>  4) == 1){
+  7e:	34 9b       	sbis	0x06, 4	; 6
+  80:	fe cf       	rjmp	.-4      	; 0x7e <main+0x34>
+			adcBufferH = ADCH;
+  82:	85 b1       	in	r24, 0x05	; 5
+  84:	90 e0       	ldi	r25, 0x00	; 0
+  86:	90 93 63 00 	sts	0x0063, r25	; 0x800063 <adcBufferH+0x1>
+  8a:	80 93 62 00 	sts	0x0062, r24	; 0x800062 <adcBufferH>
+			adcBudderL = ADCL;
+  8e:	84 b1       	in	r24, 0x04	; 4
+  90:	90 e0       	ldi	r25, 0x00	; 0
+  92:	90 93 61 00 	sts	0x0061, r25	; 0x800061 <__DATA_REGION_ORIGIN__+0x1>
+  96:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__DATA_REGION_ORIGIN__>
+  9a:	f1 cf       	rjmp	.-30     	; 0x7e <main+0x34>
+
+0000009c <__vector_2>:
+		}
+    }
+}
+
+ISR(PCINT0_vect){
+  9c:	1f 92       	push	r1
+  9e:	0f 92       	push	r0
+  a0:	0f b6       	in	r0, 0x3f	; 63
+  a2:	0f 92       	push	r0
+  a4:	11 24       	eor	r1, r1
+  a6:	8f 93       	push	r24
+	
+
+	if( (PINA & 0x80)== 0 ){
+  a8:	cf 99       	sbic	0x19, 7	; 25
+  aa:	09 c0       	rjmp	.+18     	; 0xbe <__vector_2+0x22>
+		USICR |= (1<<USIOIE);
+  ac:	8d b1       	in	r24, 0x0d	; 13
+  ae:	80 64       	ori	r24, 0x40	; 64
+  b0:	8d b9       	out	0x0d, r24	; 13
+		USISR = 1<<USIOIF;      // Clear Overflow bit
+  b2:	80 e4       	ldi	r24, 0x40	; 64
+  b4:	8e b9       	out	0x0e, r24	; 14
+		USIDR = adcBufferH;
+  b6:	80 91 62 00 	lds	r24, 0x0062	; 0x800062 <adcBufferH>
+  ba:	8f b9       	out	0x0f, r24	; 15
+  bc:	03 c0       	rjmp	.+6      	; 0xc4 <__vector_2+0x28>
+		
+		}else{
+		USICR &= ~(1<<USIOIE);
+  be:	8d b1       	in	r24, 0x0d	; 13
+  c0:	8f 7b       	andi	r24, 0xBF	; 191
+  c2:	8d b9       	out	0x0d, r24	; 13
+	}
+	
+
+}
+  c4:	8f 91       	pop	r24
+  c6:	0f 90       	pop	r0
+  c8:	0f be       	out	0x3f, r0	; 63
+  ca:	0f 90       	pop	r0
+  cc:	1f 90       	pop	r1
+  ce:	18 95       	reti
+
+000000d0 <__vector_16>:
+
+ISR(USI_OVF_vect)
+{
+  d0:	1f 92       	push	r1
+  d2:	0f 92       	push	r0
+  d4:	0f b6       	in	r0, 0x3f	; 63
+  d6:	0f 92       	push	r0
+  d8:	11 24       	eor	r1, r1
+  da:	8f 93       	push	r24
+	USIDR = adcBudderL;
+  dc:	80 91 60 00 	lds	r24, 0x0060	; 0x800060 <__DATA_REGION_ORIGIN__>
+  e0:	8f b9       	out	0x0f, r24	; 15
+	USISR = 1<<USIOIF;
+  e2:	80 e4       	ldi	r24, 0x40	; 64
+  e4:	8e b9       	out	0x0e, r24	; 14
+  e6:	8f 91       	pop	r24
+  e8:	0f 90       	pop	r0
+  ea:	0f be       	out	0x3f, r0	; 63
+  ec:	0f 90       	pop	r0
+  ee:	1f 90       	pop	r1
+  f0:	18 95       	reti
+
+000000f2 <_exit>:
+  f2:	f8 94       	cli
+
+000000f4 <__stop_program>:
+  f4:	ff cf       	rjmp	.-2      	; 0xf4 <__stop_program>
