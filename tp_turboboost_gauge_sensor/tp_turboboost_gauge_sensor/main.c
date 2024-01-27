@@ -2,7 +2,7 @@
  * TP_HUD_PRESSURE_GUAGE_ti85ADC.c
  *
  * Created: 30.10.2022 13:31:06
- * Author : ss201040303
+ * Author : rottenCoriander
  */ 
 
 /* Description : 
